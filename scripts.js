@@ -1,34 +1,34 @@
 function add(a, b) {
-    return a + b;
+    return +a + +b;
 }
 
 function subtract(a, b) {
-    return a - b;
+    return +a - +b;
 }
 
 function multiply(a, b) {
-    return a * b;
+    return +a * +b;
 }
 
 function divide(a, b) {
-    return a / b;
+    return +a / +b;
 }
 
 
-function test(n1, operator, n2) {
+function operate(n1, operator, n2) {
     switch (operator) {
         case "+":
-            console.log(add(n1, n2));
-            break;
+            return add(n1, n2);
+            
         case "-":
-            console.log(subtract(n1, n2));
-            break;
+            return subtract(n1, n2);
+           
         case "*":
-            console.log(multiply(n1, n2));
-            break;
+            return multiply(n1, n2);
+            
         case "/":
-            console.log(divide(n1, n2));
-            break;
+            return divide(n1, n2);
+            
     }
 }
 
@@ -46,18 +46,54 @@ allButtons.forEach(function (button) {
     button.addEventListener('click', buttonClick);
 });
 
-function buttonClick () {
-    console.log(this.textContent);
-    display.textContent = this.textContent;
+function buttonClick() {
+    switch (this.className) {
+        case "digit":
+            numberInput += this.textContent;
+            display.textContent = numberInput;
+            break;
+        case "operator":
+            if(!operator){
+            num2 = num1;
+            }
+            else {
+            partial = operate(num1,operator,num2);
+            num2 = partial;
+            }
+            num1 = numberInput;
+            numberInput = '';
+            operator = this.textContent;
+            display.textContent = operator;
+            break;
+        case "equal":
+            if (!num2 && numberInput) {
+                num2 = numberInput;
+            }
+            result = operate(num1,operator,num2);
+            display.textContent = result;
+            break;
+        case "clear":
+            display.textContent = '';
+            num1 = '';
+            num2 = '';
+            numberInput = '';
+            operator = '';
+            partial = '';
+            result = '';
+            break;
+    }
 
 }
 
 
-let num1;
-let num2;
-let operator;
+let num1 = '';
+let num2 = '';
+let numberInput = '';
+let operator = '';
+let partial = '';
+let result = '';
 
-// test(2,"+",0);
-// test(2,"-",0);
-// test(2,"*",0);
-// test(2,"/",0);
+// operate(2,"+",0);
+// operate(2,"-",0);
+// operate(2,"*",0);
+// operate(2,"/",0);
