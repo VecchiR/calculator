@@ -33,11 +33,31 @@ function test(n1, operator, n2) {
 }
 
 
+// const allButtons = document.querySelectorAll('button');
+// allButtons.forEach(button => {
+//     button.addEventListener('click', () => {
+//         console.log(button.textContent);
+//     });
+// });
+
+const display = document.querySelector('.display');
+const allButtons = document.querySelectorAll('button');
+allButtons.forEach(function (button) {
+    button.addEventListener('click', buttonClick);
+});
+
+function buttonClick () {
+    console.log(this.textContent);
+    display.textContent = this.textContent;
+
+}
+
+
 let num1;
 let num2;
 let operator;
 
-test(2,"+",0);
-test(2,"-",0);
-test(2,"*",0);
-test(2,"/",0);
+// test(2,"+",0);
+// test(2,"-",0);
+// test(2,"*",0);
+// test(2,"/",0);
