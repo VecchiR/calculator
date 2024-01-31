@@ -56,9 +56,14 @@ function buttonClick() {
             break;
         case "operator":
             freshFlag = false;
-            if (operator) {
+            if (!num1) {
+                num1 = "0";
+            }
+            if (operator && num2) {
                 result = operate(num1, operator, num2);
-                // if(typeof(result) != "number" || (operator === "/" && +num2 === 0)) {result = "ERROR!";}
+                if (result === Infinity || isNaN(result)) {
+                    result = "ERROR!";
+                }
                 num1 = result;
                 display.textContent = result;
                 refreshKeepResult();
@@ -66,13 +71,21 @@ function buttonClick() {
             operator = this.textContent;
             break;
         case "equal":
-            freshFlag = false;
-            // if (operator && !num2) {num2 = num1;}
-            // else if (!operator || !num1 || !num2) {break;}
+            freshFlag = true;
+            if (operator && !num2) {
+                num2 = num1;
+                resetOperator = false;
+            }
+            else if (!operator || !num1 || !num2) {
+                break;
+            }
             result = operate(num1, operator, num2);
-            // if(typeof(result) != "number" || (operator === "/" && +num2 === 0)) {result = "ERROR!";}
+            if (result === Infinity || isNaN(result)) {
+                result = "ERROR!";
+            }
             display.textContent = result;
             refreshKeepResult();
+            resetOperator = true;
             break;
         case "clear":
             freshFlag = true;
@@ -89,8 +102,8 @@ function buttonClick() {
 function refreshKeepResult() {
     num1 = result;
     num2 = '';
-    operator = '';
     result = '';
+    if (resetOperator){operator = '';}
 }
 
 let operator = '';
@@ -98,3 +111,4 @@ let result = '';
 let num1 = '';
 let num2 = '';
 let freshFlag = true;
+let resetOperator = true;
