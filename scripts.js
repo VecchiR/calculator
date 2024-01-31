@@ -41,17 +41,24 @@ allButtons.forEach(function (button) {
 function buttonClick() {
     switch (this.className) {
         case "digit":
-            if (!operator) {
+            if (freshFlag) {
+                num1 = this.textContent;
+                display.textContent = num1;
+                freshFlag = false;
+            } else if (!operator && !freshFlag) {
                 num1 += this.textContent;
                 display.textContent = num1;
-            } else {
+            }
+            else {
                 num2 += this.textContent;
                 display.textContent = num2;
             }
             break;
         case "operator":
+            freshFlag = false;
             if (operator) {
                 result = operate(num1, operator, num2);
+                // if(typeof(result) != "number" || (operator === "/" && +num2 === 0)) {result = "ERROR!";}
                 num1 = result;
                 display.textContent = result;
                 refreshKeepResult();
@@ -59,11 +66,16 @@ function buttonClick() {
             operator = this.textContent;
             break;
         case "equal":
+            freshFlag = false;
+            // if (operator && !num2) {num2 = num1;}
+            // else if (!operator || !num1 || !num2) {break;}
             result = operate(num1, operator, num2);
+            // if(typeof(result) != "number" || (operator === "/" && +num2 === 0)) {result = "ERROR!";}
             display.textContent = result;
             refreshKeepResult();
             break;
         case "clear":
+            freshFlag = true;
             display.textContent = '';
             num1 = '';
             num2 = '';
@@ -85,3 +97,4 @@ let operator = '';
 let result = '';
 let num1 = '';
 let num2 = '';
+let freshFlag = true;
