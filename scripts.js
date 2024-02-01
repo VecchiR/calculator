@@ -41,11 +41,12 @@ allButtons.forEach(function (button) {
 function buttonClick() {
     switch (this.className) {
         case "digit":
+            numberFlag = setNumberFlag();
             if (freshFlag || num1 === "0") {
                 num1 = this.textContent;
                 display.textContent = num1;
                 freshFlag = false;
-            } else if (!operator && !freshFlag) {
+            } else if (!operator && !freshFlag && num1.length < 9) {
                 num1 += this.textContent;
                 display.textContent = num1;
             }
@@ -53,7 +54,7 @@ function buttonClick() {
                 if (num2 === "0") {
                     num2 = this.textContent;
                 }
-                else {
+                else if (num2.length < 9) {
                     num2 += this.textContent;
                 }
                 display.textContent = num2;
@@ -93,6 +94,7 @@ function buttonClick() {
             resetOperator = true;
             break;
         case "clear":
+            numberFlag = true;
             freshFlag = true;
             display.textContent = '';
             num1 = '';
@@ -105,10 +107,15 @@ function buttonClick() {
 }
 
 function refreshKeepResult() {
-    num1 = result;
+    num1 = result.toString();
     num2 = '';
     result = '';
+    numberFlag = true;
     if (resetOperator) { operator = ''; }
+}
+
+function setNumberFlag() {
+    if
 }
 
 let operator = '';
@@ -117,3 +124,4 @@ let num1 = '';
 let num2 = '';
 let freshFlag = true;
 let resetOperator = true;
+let numberFlag = true;
