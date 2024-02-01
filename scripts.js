@@ -41,7 +41,7 @@ allButtons.forEach(function (button) {
 function buttonClick() {
     switch (this.className) {
         case "digit":
-            numberFlag = setNumberFlag();
+            flag = setFlag();
             if (freshFlag || num1 === "0") {
                 num1 = this.textContent;
                 display.textContent = num1;
@@ -94,7 +94,7 @@ function buttonClick() {
             resetOperator = true;
             break;
         case "clear":
-            numberFlag = true;
+            onflag = true;
             freshFlag = true;
             display.textContent = '';
             num1 = '';
@@ -110,12 +110,27 @@ function refreshKeepResult() {
     num1 = result.toString();
     num2 = '';
     result = '';
-    numberFlag = true;
+    onflag = true;
     if (resetOperator) { operator = ''; }
 }
 
-function setNumberFlag() {
-    if
+function setFlag() {
+    
+    //is it fresh OU is num1 = 0?
+        // num1 override
+
+    // operator VAZIO?
+        //num1 tem MENOS que 9 dígitos?
+            // num1 += display
+        // discard digit
+
+    //  o num2 é 0?
+        // num2 override
+    
+    // nada disso
+        //num2 tem MENOS que 9 dígitos?
+            // num2 += display
+        // discard digit
 }
 
 let operator = '';
@@ -124,4 +139,4 @@ let num1 = '';
 let num2 = '';
 let freshFlag = true;
 let resetOperator = true;
-let numberFlag = true;
+let onflag = true; //true if inputting num1, false if num2
