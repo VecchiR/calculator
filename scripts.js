@@ -39,27 +39,34 @@ allButtons.forEach(function (button) {
 });
 
 function buttonClick() {
+
     switch (this.className) {
+
         case "digit":
-            flag = setFlag();
-            if (freshFlag || num1 === "0") {
-                num1 = this.textContent;
-                display.textContent = num1;
-                freshFlag = false;
-            } else if (!operator && !freshFlag && num1.length < 9) {
-                num1 += this.textContent;
-                display.textContent = num1;
-            }
-            else {
-                if (num2 === "0") {
+            digitFlag = setDigitFlag();
+            switch (true) {
+                case (digitFlag === 'override num1'):
+                    num1 = this.textContent;
+                    display.textContent = num1;
+                    freshFlag = false;
+                    break;
+                case (digitFlag === 'increase num1'):
+                    num1 += this.textContent;
+                    display.textContent = num1;
+                    break;
+                case (digitFlag === 'override num2'):
                     num2 = this.textContent;
-                }
-                else if (num2.length < 9) {
+                    display.textContent = num2;
+                    break;
+                case (digitFlag === 'increase num2'):
                     num2 += this.textContent;
-                }
-                display.textContent = num2;
+                    display.textContent = num2;
+                    break;
+                case (digitFlag === 'discard'):
+                    break;
             }
             break;
+
         case "operator":
             freshFlag = false;
             if (!num1) {
@@ -76,6 +83,7 @@ function buttonClick() {
             }
             operator = this.textContent;
             break;
+
         case "equal":
             freshFlag = true;
             if (operator && !num2) {
@@ -93,8 +101,9 @@ function buttonClick() {
             refreshKeepResult();
             resetOperator = true;
             break;
+
         case "clear":
-            onflag = true;
+            digitFlag = "";
             freshFlag = true;
             display.textContent = '';
             num1 = '';
@@ -110,27 +119,37 @@ function refreshKeepResult() {
     num1 = result.toString();
     num2 = '';
     result = '';
-    onflag = true;
+    digitFlag = "";
     if (resetOperator) { operator = ''; }
 }
 
-function setFlag() {
-    
-    //is it fresh OU is num1 = 0?
-        // num1 override
+function setDigitFlag() {
 
-    // operator VAZIO?
-        //num1 tem MENOS que 9 dígitos?
-            // num1 += display
-        // discard digit
+    switch (true) {
+        case (freshFlag || num1 === '0'):
+            return('override num1');
 
-    //  o num2 é 0?
-        // num2 override
-    
-    // nada disso
-        //num2 tem MENOS que 9 dígitos?
-            // num2 += display
-        // discard digit
+        case (!operator):
+            if (num1.length < 9) {
+                return('increase num1');
+            }
+
+            else {
+                return('discard');
+            }
+
+        case (num2 === '0'):
+            return ('override num2');
+
+        default:
+            if (num2.length < 9) {
+                return ('increase num2');
+            }
+            else {
+                return ('discard');
+            }
+    }
+
 }
 
 let operator = '';
@@ -139,4 +158,4 @@ let num1 = '';
 let num2 = '';
 let freshFlag = true;
 let resetOperator = true;
-let onflag = true; //true if inputting num1, false if num2
+let digitFlag = '';
