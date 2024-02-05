@@ -70,7 +70,7 @@ function buttonClick() {
                     display.textContent = num2;
                     break;
 
-                case (digitFlag === 'discard'):
+                case (digitFlag === 'discard1' || digitFlag === 'discard2'):
                     break;
             }
             break;
@@ -134,6 +134,26 @@ function buttonClick() {
             result = '';
             roundedResult = '';
             break;
+
+        case "backspace":
+            digitFlag = setDigitFlag();
+            switch (true) {
+                case (digitFlag === 'overwrite num1'):
+                case (digitFlag === 'increase num1'):
+                case (digitFlag === 'discard1'):
+                    num1 = num1.substring(0, num1.length - 1);
+                    display.textContent = num1;
+                    break;
+                
+                case (digitFlag === 'overwrite num2'):
+                case (digitFlag === 'increase num2'):
+                case (digitFlag === 'discard2'):
+                    num2 = num2.substring(0, num2.length - 1);
+                    display.textContent = num2;
+                    break;
+
+            break;
+            }
     }
 
 }
@@ -176,7 +196,7 @@ function refreshKeepResult() {
 function setDigitFlag() {
 
     switch (true) {
-        case (freshFlag || num1 === '0'):
+        case (freshFlag || num1 === '0' || num1 === ''):
             return('overwrite num1');
 
         case (!operator):
@@ -185,7 +205,7 @@ function setDigitFlag() {
             }
 
             else {
-                return('discard');
+                return('discard1');
             }
 
         case (num2 === '0' || num2 === ''):
@@ -196,7 +216,7 @@ function setDigitFlag() {
                 return ('increase num2');
             }
             else {
-                return ('discard');
+                return ('discard2');
             }
     }
 
