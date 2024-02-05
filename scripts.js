@@ -38,6 +38,64 @@ allButtons.forEach(function (button) {
     button.addEventListener('click', buttonClick);
 });
 
+
+window.addEventListener('keydown', (e) => {
+    switch (e.key) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+            document.querySelector(`#n${e.key}`).click();
+            break;
+        
+        case '/':
+            document.querySelector('#divide').click();
+            break;
+        case '*':
+            document.querySelector('#multiply').click();
+            break;
+        case '-':
+            document.querySelector('#minus').click();
+            break;
+        case '+':
+            document.querySelector('#plus').click();
+            break;
+    }
+    
+    switch (e.code) {
+        case 'Comma': 
+        case 'Period':
+        case 'NumpadDecimal':
+            document.querySelector('#period').click();
+            break;
+
+        case 'Enter':
+        case 'Equal':
+        case 'NumpadEnter':
+            document.querySelector('.equal').click();
+            break;
+
+        case 'Backspace':
+        case 'Delete':
+            document.querySelector('.backspace').click();
+            break;
+
+        case 'Space':
+        case 'Escape':
+            document.querySelector('.clear').click();
+            break;
+        
+    }
+}, {});
+
+
+
 function buttonClick() {
 
     switch (this.className) {
