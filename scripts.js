@@ -212,7 +212,7 @@ function buttonClick() {
                 case (digitFlag === 'increase num1'):
                 case (digitFlag === 'discard1'):
                     num1 = num1.substring(0, num1.length - 1);
-                    if (num1 === '') {num1 = '0';}
+                    if (num1 === '') { num1 = '0'; }
                     display.textContent = num1;
                     break;
 
@@ -223,7 +223,7 @@ function buttonClick() {
                 case (digitFlag === 'increase num2'):
                 case (digitFlag === 'discard2'):
                     num2 = num2.substring(0, num2.length - 1);
-                    if (num2 === '') {num2 = '0';}
+                    if (num2 === '') { num2 = '0'; }
                     display.textContent = num2;
                     break;
             }
@@ -292,18 +292,31 @@ function roundResult() {
         let decimal = '';
         let availableLength = 0;
 
-        //a partir daqui, arredonda para 1e9 e precisa começar a usar o exponencial
-        if (parseFloat(result) >= 999999999.5) {
-            roundedResult = trunc;
-            return;
+        if (result.includes('.')) {
+            decimal = `${result.substring(result.indexOf('.') + 1)}`;
         }
+
+
+        //a partir daqui, arredonda para 1e9 e precisa começar a usar o exponencial
+        // if (parseFloat(result) >= 999999999.5) {
+
+        //     if (parseInt(decimal) >= 5) { trunc = (parseInt(trunc) + 1).toString(); }
+
+        //     trunc = trunc.substring(0, 9);
+             
+        //     if (parseInt(decimal.at(-1)) >= 5) {
+        //         decimal = decimal.slice(0, -2) + (parseInt(decimal.at(-2)) + 1);
+        //     }
+        //     else { decimal = decimal.substring(0, availableLength); }
+        //     roundedResult = `${trunc}.${decimal}`;
+        //     return;
+
+        //     roundedResult = trunc;
+        //     return;
+        // }
 
         //nessa faixa de valores, basta arredondar os decimais (se houver)
         if (parseFloat(result) < 999999999.5 && parseFloat(result) >= 0.00000001) {
-
-            if (result.includes('.')) {
-                decimal = `${result.substring(result.indexOf('.') + 1)}`;
-            }
 
             availableLength = 9 - trunc.length;
 
@@ -317,7 +330,7 @@ function roundResult() {
                 return;
             }
             else {
-                if (parseInt(decimal) >= 5) { trunc = (parseInt(trunc)+1).toString(); }
+                if (parseInt(decimal.at(0)) >= 5) { trunc = (parseInt(trunc) + 1).toString(); }
                 roundedResult = trunc;
                 return;
             }
@@ -327,10 +340,10 @@ function roundResult() {
 
         //abaixo desse valor, será necessário o uso de exponenciais negativos
 
-        if (parseFloat(result) < 0.00000001) {
-            roundedResult = result;
-            return;
-        }
+        // if (parseFloat(result) < 0.00000001) {
+        //     roundedResult = result;
+        //     return;
+        // }
 
     }
 }
