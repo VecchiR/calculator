@@ -281,7 +281,7 @@ function setDigitFlag() {
 function roundResult() {
 
     // OU 9 casas SEM ponto decimal, OU 10 casas DESDE QUE o ponto decimal NÃO esteja na última casa
-    if ((result.length <= 9 && !checkPoint(result)) || (result.length <= 10 && checkPoint(result) && (result.indexOf('.') != result.lenght - 1))) {
+    if ((result.length <= 9 && !checkPoint(result)) || (result.length <= 10 && checkPoint(result) && (result.indexOf('.') != result.length - 1))) {
         roundedResult = result;
         return;
     }
@@ -298,22 +298,37 @@ function roundResult() {
 
 
         //a partir daqui, arredonda para 1e9 e precisa começar a usar o exponencial
-        // if (parseFloat(result) >= 999999999.5) {
+        if (parseFloat(result) >= 999999999.5) {
 
-        //     if (parseInt(decimal) >= 5) { trunc = (parseInt(trunc) + 1).toString(); }
+            if (parseInt(decimal.at(0)) >= 5) { trunc = (parseInt(trunc) + 1).toString(); }
 
-        //     trunc = trunc.substring(0, 9);
-             
-        //     if (parseInt(decimal.at(-1)) >= 5) {
-        //         decimal = decimal.slice(0, -2) + (parseInt(decimal.at(-2)) + 1);
-        //     }
-        //     else { decimal = decimal.substring(0, availableLength); }
-        //     roundedResult = `${trunc}.${decimal}`;
-        //     return;
+            let e = 10 ** (trunc.length - 1);
+            let truncByE = `${(parseInt(trunc) / e)}`;
+            let eString = `e${trunc.length - 1}`;
+            let truncByEInteger = Math.trunc(truncByE).toString();
+            let truncByEDecimal = '';
+            if (truncByE.includes('.')) {
+                truncByEDecimal = `${truncByE.substring(truncByE.indexOf('.') + 1)}`;
+            }
 
-        //     roundedResult = trunc;
-        //     return;
-        // }
+
+            availableLength = 9 - (eString.length) - (truncByEInteger.length);
+            // if (checkPoint(truncByE)) { availableLength++;}
+
+            if (truncByEDecimal.length > availableLength && availableLength > 0) {
+                truncByEDecimal = truncByEDecimal.substring(0, availableLength + 1);
+                if (parseInt(truncByEDecimal.at(-1)) >= 5) {
+                    truncByEDecimal = truncByEDecimal.slice(0, -2) + (parseInt(truncByEDecimal.at(-2)) + 1);
+                }
+                else { truncByEDecimal = truncByEDecimal.substring(0, availableLength); }
+
+                roundedResult = `${truncByEInteger}.${truncByEDecimal}${eString}`;
+                return;
+            }
+
+            roundedResult = truncByE + eString;
+            return;
+        }
 
         //nessa faixa de valores, basta arredondar os decimais (se houver)
         if (parseFloat(result) < 999999999.5 && parseFloat(result) >= 0.00000001) {
