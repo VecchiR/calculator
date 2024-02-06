@@ -355,10 +355,36 @@ function roundResult() {
 
         //abaixo desse valor, será necessário o uso de exponenciais negativos
 
-        // if (parseFloat(result) < 0.00000001) {
-        //     roundedResult = result;
-        //     return;
-        // }
+        if (parseFloat(result) < 0.00000001) {
+
+            let zeroCount = result.match(/(\.0*)/)[0].length - 1;
+            let e = 10 ** -(zeroCount+1);
+            let eString = `e-${zeroCount+1}`;
+            let noPointByE = (parseFloat(decimal) * e).toString() ;
+            let noPointByETrunc = Math.trunc(noPointByE).toString();
+            let noPointByEDecimal = '';
+            if (noPointByE.includes('.')) {
+                noPointByEDecimal = `${noPointByE.substring(noPointByE.indexOf('.') + 1)}`;
+            }
+
+            availableLength = 8 - (eString.length) - (noPointByETrunc.length);
+            // if (checkPoint(noPointByE)) { availableLength++;}
+
+            if (noPointByEDecimal.length > availableLength && availableLength > 0) {
+                noPointByEDecimal = noPointByEDecimal.substring(0, availableLength + 1);
+                if (parseInt(noPointByEDecimal.at(-1)) >= 5) {
+                    noPointByEDecimal = noPointByEDecimal.slice(0, -2) + (parseInt(noPointByEDecimal.at(-2)) + 1);
+                }
+                else { noPointByEDecimal = noPointByEDecimal.substring(0, availableLength); }
+
+                roundedResult = `${noPointByEInteger}.${noPointByEDecimal}${eString}`;
+                return;
+            }
+
+            roundedResult = noPointByE + eString;
+            return;
+
+        }
 
     }
 }
