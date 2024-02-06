@@ -206,19 +206,25 @@ function buttonClick() {
             digitFlag = setDigitFlag();
             switch (true) {
                 case (digitFlag === 'overwrite num1'):
+                    num1 = '0';
+                    display.textContent = num1;
+                    break;
                 case (digitFlag === 'increase num1'):
                 case (digitFlag === 'discard1'):
                     num1 = num1.substring(0, num1.length - 1);
+                    if (num1 === '') {num1 = '0';}
                     display.textContent = num1;
                     break;
 
                 case (digitFlag === 'overwrite num2'):
+                    num2 = '0';
+                    display.textContent = num2;
+                    break;
                 case (digitFlag === 'increase num2'):
                 case (digitFlag === 'discard2'):
                     num2 = num2.substring(0, num2.length - 1);
+                    if (num2 === '') {num2 = '0';}
                     display.textContent = num2;
-                    break;
-
                     break;
             }
     }
@@ -273,8 +279,9 @@ function setDigitFlag() {
 }
 
 function roundResult() {
-    if ((result.length <= 9 && !checkPoint(result)) || (result.length <= 10 && checkPoint(result) && (result.indexOf('.') != result.lenght-1))) {
-        // OU 9 casas SEM ponto decimal, OU 10 casas DESDE QUE o ponto decimal NÃO esteja na última casa
+
+    // OU 9 casas SEM ponto decimal, OU 10 casas DESDE QUE o ponto decimal NÃO esteja na última casa
+    if ((result.length <= 9 && !checkPoint(result)) || (result.length <= 10 && checkPoint(result) && (result.indexOf('.') != result.lenght - 1))) {
         roundedResult = result;
         return;
     }
@@ -284,42 +291,46 @@ function roundResult() {
         let trunc = Math.trunc(result).toString();
         let decimal = '';
         let availableLength = 0;
-        if (result.includes('.')){
-            decimal = `${result.substring(result.indexOf('.')+1)}`;
-        }
-        
-        availableLength = 8-trunc.length; // display has 9 slots - 1 slot for the decimal point - X trunc length
 
-        if (decimal.length > availableLength) {
-            decimal = decimal.substring(0, availableLength+1); 
-            if (parseInt(decimal.at(-1)) >= 5) {
-                decimal = decimal.slice(0, -2) + (parseInt(decimal.at(-2))+1);
+        //a partir daqui, arredonda para 1e9 e precisa começar a usar o exponencial
+        if (parseFloat(result) >= 999999999.5) {
+            roundedResult = trunc;
+            return;
+        }
+
+        //nessa faixa de valores, basta arredondar os decimais (se houver)
+        if (parseFloat(result) < 999999999.5 && parseFloat(result) >= 0.00000001) {
+
+            if (result.includes('.')) {
+                decimal = `${result.substring(result.indexOf('.') + 1)}`;
             }
-            else {decimal = decimal.substring(0, availableLength);}
+
+            availableLength = 9 - trunc.length;
+
+            if (decimal.length > availableLength && availableLength > 0) {
+                decimal = decimal.substring(0, availableLength + 1);
+                if (parseInt(decimal.at(-1)) >= 5) {
+                    decimal = decimal.slice(0, -2) + (parseInt(decimal.at(-2)) + 1);
+                }
+                else { decimal = decimal.substring(0, availableLength); }
+                roundedResult = `${trunc}.${decimal}`;
+                return;
+            }
+            else {
+                if (parseInt(decimal) >= 5) { trunc = (parseInt(trunc)+1).toString(); }
+                roundedResult = trunc;
+                return;
+            }
+
+
         }
 
+        //abaixo desse valor, será necessário o uso de exponenciais negativos
 
-
-        // if (decimal.length > availableLength) {
-        //     decimal = Math.round(parseFloat(decimal)*(10**availableLength));
-        // }
-
-        //se tem 0 logo depois da virgula, quanto converter pra numero vai bugar
-
-
-        roundedResult = `${trunc}.${decimal}`;
-
-
-        if (trunc.toString().length > 9) {
-            // let parte = 
-            // let append  
+        if (parseFloat(result) < 0.00000001) {
+            roundedResult = result;
             return;
         }
-
-        else {
-            return;
-        }
-
 
     }
 }
