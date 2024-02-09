@@ -154,6 +154,7 @@ function buttonClick() {
                     result = "ERROR!";
                 }
 
+
                 roundResult();
 
                 display.textContent = roundedResult;
@@ -180,7 +181,6 @@ function buttonClick() {
             }
 
             roundResult();
-
             display.textContent = roundedResult;
 
             refreshKeepResult();
@@ -278,10 +278,6 @@ function setDigitFlag() {
 
 function roundResult() {
 
-    // "If number is longer than 21 digit, JS uses exponential notation.  (999999999999999934464)
-    // JS also uses exponential notation if number starts with “0.” followed by more than five zeros."
-
-
     // OU 9 casas SEM ponto decimal, OU 10 casas DESDE QUE o ponto decimal NÃO esteja na última casa
     if ((result.length <= 9 && !checkPoint(result)) || (result.length <= 10 && checkPoint(result) && (result.indexOf('.') != result.length - 1))) {
         roundedResult = result;
@@ -302,7 +298,7 @@ function roundResult() {
         }
 
         // a partir desse numero, já vem em notação exponencial. Só precisa fazer respeitar os 9 dígitos
-        if (parseFloat(result) >= 999999999999999934464) {
+        if (Math.abs(parseFloat(result)) >= 999999999999999934464) {
 
             let eString = result.substring(result.indexOf('e'));
 
@@ -323,13 +319,13 @@ function roundResult() {
                 return;
             }
 
-
+            
         }
 
 
         //a partir daqui, arredonda para 1e9 e precisa começar a usar o exponencial. Mas tem que ser MENOR que o ponto
         //em que o JS começa a colocar a forma exponencial por si só
-        if (parseFloat(result) >= 999999999.5 && parseFloat(result) < 999999999999999934464) {
+        if (Math.abs(parseFloat(result)) >= 999999999.5 && Math.abs(parseFloat(result)) < 999999999999999934464) {
 
             if (parseInt(decimal.at(0)) >= 5) { trunc = (parseInt(trunc) + 1).toString(); }
 
@@ -361,7 +357,7 @@ function roundResult() {
         }
 
         //nessa faixa de valores, basta arredondar os decimais (se houver)
-        if (parseFloat(result) < 999999999.5 && parseFloat(result) > 0.0000001) {
+        if (Math.abs(parseFloat(result)) < 999999999.5 && Math.abs(parseFloat(result)) > 0.0000001) {
 
             availableLength = 9 - trunc.length;
 
@@ -384,7 +380,7 @@ function roundResult() {
         }
 
         //abaixo desse valor, será necessário o uso de exponenciais negativos
-        if (parseFloat(result) <= 0.0000001) {
+        if (Math.abs(parseFloat(result)) <= 0.0000001) {
 
             let eFactor = Math.abs(result.substring(result.indexOf('e') + 1));
             let eString = result.substring(result.indexOf('e'));
@@ -412,7 +408,9 @@ function roundResult() {
                         trunc = (parseInt(trunc) + 1).toString();
 
                         if (trunc.length > 1) {
-                            trunc = "1";
+                            if (trunc > 0) { trunc = "1"; }
+                            else { trunc = "-1"; }
+
                             eFactor--;
                             eString = `e-${eFactor}`;
                         }
@@ -437,33 +435,6 @@ function roundResult() {
                 roundedResult = trunc + eString;
                 return;
             }
-
-            // let zeroCount = result.match(/(\.0*)/)[0].length - 1;
-            // let e = 10 ** -(zeroCount+1);
-            // let eString = `e-${zeroCount+1}`;
-            // let noPointByE = (parseFloat(decimal) * e).toString() ;
-            // let noPointByETrunc = Math.trunc(noPointByE).toString();
-            // let noPointByEDecimal = '';
-            // if (noPointByE.includes('.')) {
-            //     noPointByEDecimal = `${noPointByE.substring(noPointByE.indexOf('.') + 1)}`;
-            // }
-
-            // availableLength = 8 - (eString.length) - (noPointByETrunc.length);
-            // // if (checkPoint(noPointByE)) { availableLength++;}
-
-            // if (noPointByEDecimal.length > availableLength && availableLength > 0) {
-            //     noPointByEDecimal = noPointByEDecimal.substring(0, availableLength + 1);
-            //     if (parseInt(noPointByEDecimal.at(-1)) >= 5) {
-            //         noPointByEDecimal = noPointByEDecimal.slice(0, -2) + (parseInt(noPointByEDecimal.at(-2)) + 1);
-            //     }
-            //     else { noPointByEDecimal = noPointByEDecimal.substring(0, availableLength); }
-
-            //     roundedResult = `${noPointByETrunc}.${noPointByEDecimal}${eString}`;
-            //     return;
-            // }
-
-            // roundedResult = noPointByE + eString;
-            // return;
 
         }
 
