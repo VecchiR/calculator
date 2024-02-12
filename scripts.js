@@ -148,14 +148,19 @@ function buttonClick() {
             }
             if (operator && num2) {
 
-                result = operate(num1, operator, num2).toString();
+                result = operate(num1, operator, num2);
 
                 if (result === Infinity || isNaN(result)) {
                     result = "ERROR!";
+                    roundedResult = result;
                 }
 
 
-                roundResult();
+                else {
+                    result = result.toString();
+                    roundResult();
+                    removeDecimalZeros();
+                }
 
                 display.textContent = roundedResult;
 
@@ -174,13 +179,19 @@ function buttonClick() {
                 break;
             }
 
-            result = operate(num1, operator, num2).toString();
+            result = operate(num1, operator, num2);
 
             if (result === Infinity || isNaN(result)) {
                 result = "ERROR!";
+                roundedResult = result;
             }
 
-            roundResult();
+            else {
+                result = result.toString();
+                roundResult();
+                removeDecimalZeros();
+            }
+
             display.textContent = roundedResult;
 
             refreshKeepResult();
@@ -300,26 +311,63 @@ function roundResult() {
         // a partir desse numero, já vem em notação exponencial. Só precisa fazer respeitar os 9 dígitos
         if (Math.abs(parseFloat(result)) >= 999999999999999934464) {
 
+            let eFactor = Math.abs(result.substring(result.indexOf('e') + 1));
             let eString = result.substring(result.indexOf('e'));
+
 
             availableLength = 9 - trunc.length - eString.length;
 
             if (decimal.length > availableLength && availableLength > 0) {
                 decimal = decimal.substring(0, availableLength + 1);
-                if (parseInt(decimal.at(-1)) >= 5) {
+
+
+                if (parseInt(decimal.at(-1)) >= 5 && parseInt(decimal.at(-2)) === 9) {
+
+                    decimal = decimal.substring(0, decimal.length - 1);
+
+                    while (parseInt(decimal.at(-1)) === 9) {
+                        decimal = decimal.substring(0, decimal.length - 1);
+                    }
+
+                    if (decimal) {
+                        decimal = decimal.slice(0, -1) + (parseInt(decimal.at(-1)) + 1);
+                        roundedResult = trunc + '.' + decimal + eString;
+                        return;
+                    }
+
+                    else {
+                        trunc = (parseInt(trunc) + 1).toString();
+
+                        if (trunc.length > 1) {
+                            if (trunc > 0) { trunc = "1"; }
+                            else { trunc = "-1"; }
+
+                            eFactor++;
+                            eString = `e+${eFactor}`;
+                        }
+
+                        roundedResult = trunc + eString;
+                        return;
+                    }
+
+                }
+
+
+                else if (parseInt(decimal.at(-1)) >= 5 && parseInt(decimal.at(-2)) != 9) {
                     decimal = decimal.slice(0, -2) + (parseInt(decimal.at(-2)) + 1);
                 }
+
                 else { decimal = decimal.substring(0, availableLength); }
+
                 roundedResult = `${trunc}.${decimal}${eString}`;
                 return;
             }
             else {
-                if (parseInt(decimal.at(0)) >= 5) { trunc = (parseInt(trunc) + 1).toString(); }
-                roundedResult = trunc + eString;
+                // if (parseInt(decimal.at(0)) >= 5) { trunc = (parseInt(trunc) + 1).toString(); }
+                // roundedResult = trunc + eString;
+                roundedResult = `${trunc}.${decimal}${eString}`;
                 return;
             }
-
-            
         }
 
 
@@ -343,17 +391,51 @@ function roundResult() {
 
             if (truncByEDecimal.length > availableLength && availableLength > 0) {
                 truncByEDecimal = truncByEDecimal.substring(0, availableLength + 1);
-                if (parseInt(truncByEDecimal.at(-1)) >= 5) {
+
+                if (parseInt(truncByEDecimal.at(-1)) >= 5 && parseInt(truncByEDecimal.at(-2)) === 9) {
+
+                    truncByEDecimal = truncByEDecimal.substring(0, truncByEDecimal.length - 1);
+
+                    while (parseInt(truncByEDecimal.at(-1)) === 9) {
+                        truncByEDecimal = truncByEDecimal.substring(0, truncByEDecimal.length - 1);
+                    }
+
+                    if (truncByEDecimal) {
+                        truncByEDecimal = truncByEDecimal.slice(0, -1) + (parseInt(truncByEDecimal.at(-1)) + 1);
+                        roundedResult = truncByEInteger + '.' + truncByEDecimal + eString;
+                        return;
+                    }
+
+                    else {
+                        truncByEInteger = (parseInt(truncByEInteger) + 1).toString();
+
+                        if (truncByEInteger.length > 1) {
+                            if (truncByEInteger > 0) { truncByEInteger = "1"; }
+                            else { truncByEInteger = "-1"; }
+
+                            eString = `e+${(trunc.length - 1) + 1}`;
+                        }
+
+                        roundedResult = truncByEInteger + eString;
+                        return;
+                    }
+
+                }
+
+
+                else if (parseInt(truncByEDecimal.at(-1)) >= 5 && parseInt(truncByEDecimal.at(-2)) != 9) {
                     truncByEDecimal = truncByEDecimal.slice(0, -2) + (parseInt(truncByEDecimal.at(-2)) + 1);
                 }
+
                 else { truncByEDecimal = truncByEDecimal.substring(0, availableLength); }
 
                 roundedResult = `${truncByEInteger}.${truncByEDecimal}${eString}`;
                 return;
             }
-
-            roundedResult = truncByE + eString;
-            return;
+            else {
+                roundedResult = truncByE + eString;
+                return;
+            }
         }
 
         //nessa faixa de valores, basta arredondar os decimais (se houver)
@@ -363,10 +445,37 @@ function roundResult() {
 
             if (decimal.length > availableLength && availableLength > 0) {
                 decimal = decimal.substring(0, availableLength + 1);
-                if (parseInt(decimal.at(-1)) >= 5) {
+
+
+                if (parseInt(decimal.at(-1)) >= 5 && parseInt(decimal.at(-2)) === 9) {
+
+                    decimal = decimal.substring(0, decimal.length - 1);
+
+                    while (parseInt(decimal.at(-1)) === 9) {
+                        decimal = decimal.substring(0, decimal.length - 1);
+                    }
+
+                    if (decimal) {
+                        decimal = decimal.slice(0, -1) + (parseInt(decimal.at(-1)) + 1);
+                        roundedResult = trunc + '.' + decimal;
+                        return;
+                    }
+
+                    else {
+                        trunc = (parseInt(trunc) + 1).toString();
+                        roundedResult = trunc;
+                        return;
+                    }
+
+                }
+
+
+                else if (parseInt(decimal.at(-1)) >= 5 && parseInt(decimal.at(-2)) != 9) {
                     decimal = decimal.slice(0, -2) + (parseInt(decimal.at(-2)) + 1);
                 }
+
                 else { decimal = decimal.substring(0, availableLength); }
+
                 roundedResult = `${trunc}.${decimal}`;
                 return;
             }
@@ -376,10 +485,9 @@ function roundResult() {
                 return;
             }
 
-
         }
 
-        //abaixo desse valor, será necessário o uso de exponenciais negativos
+        //abaixo desse valor, será necessário o uso de exponenciais negativos (mas o JS já escreve nessa notação a partir daqui!)
         if (Math.abs(parseFloat(result)) <= 0.0000001) {
 
             let eFactor = Math.abs(result.substring(result.indexOf('e') + 1));
@@ -402,6 +510,7 @@ function roundResult() {
                     if (decimal) {
                         decimal = decimal.slice(0, -1) + (parseInt(decimal.at(-1)) + 1);
                         roundedResult = trunc + '.' + decimal + eString;
+                        return;
                     }
 
                     else {
@@ -416,6 +525,7 @@ function roundResult() {
                         }
 
                         roundedResult = trunc + eString;
+                        return;
                     }
 
                 }
@@ -431,13 +541,49 @@ function roundResult() {
                 return;
             }
             else {
-                if (parseInt(decimal.at(0)) >= 5) { trunc = (parseInt(trunc) + 1).toString(); }
-                roundedResult = trunc + eString;
+                // if (parseInt(decimal.at(0)) >= 5) { trunc = (parseInt(trunc) + 1).toString(); }
+                // roundedResult = trunc + eString;
+                roundedResult = `${trunc}.${decimal}${eString}`;
                 return;
             }
 
         }
 
     }
+
+
 }
+
+function removeDecimalZeros() {
+    if (!checkPoint(roundedResult)) { return; }
+
+    else {
+        let trunc = Math.trunc(parseInt(roundedResult)).toString();
+        let decimal = `${roundedResult.substring(roundedResult.indexOf('.') + 1)}`;
+        let eString = '';
+        if (decimal.includes('e')) {
+            decimal = `${decimal.substring(0, decimal.indexOf('e'))}`;
+            eString = roundedResult.substring(roundedResult.indexOf('e'));
+        }
+
+        while (parseInt(decimal.at(-1)) === 0) {
+            decimal = decimal.substring(0, decimal.length - 1);
+        }
+
+        if (decimal) {
+            roundedResult = trunc + '.' + decimal + eString;
+            return;
+        }
+
+        else {
+            roundedResult = trunc + eString;
+            return;
+        }
+
+
+    }
+
+}
+
+
 
