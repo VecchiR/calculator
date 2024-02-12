@@ -314,9 +314,10 @@ function roundResult() {
     else {
         let sign = Math.sign(parseFloat(result));
         let signSlotIfNegative = ((1-(sign))/2); // 0 if positive, 1 if negative 
-        let trunc = Math.trunc(parseInt(result)).toString();
+        let trunc = Math.abs(Math.trunc(parseInt(result))).toString();
         let decimal = '';
         let availableLength = 0;
+        roundedResult = '';
 
         if (result.includes('.')) {
             decimal = `${result.substring(result.indexOf('.') + 1)}`;
@@ -348,7 +349,9 @@ function roundResult() {
 
                     if (decimal) {
                         decimal = decimal.slice(0, -1) + (parseInt(decimal.at(-1)) + 1);
-                        roundedResult = trunc + '.' + decimal + eString;
+
+                        if (sign < 0) {roundedResult = '-';}
+                        roundedResult = roundedResult + trunc + '.' + decimal + eString;
                         return;
                     }
 
@@ -356,14 +359,14 @@ function roundResult() {
                         trunc = (parseInt(trunc) + 1).toString();
 
                         if (trunc.length > 1) {
-                            if (trunc > 0) { trunc = "1"; }
-                            else { trunc = "-1"; }
-
+                            trunc = '1';
                             eFactor++;
                             eString = `e+${eFactor}`;
                         }
 
-                        roundedResult = trunc + eString;
+                        if (sign < 0) {roundedResult = '-';}
+                        roundedResult = roundResult + trunc + eString;
+                        
                         return;
                     }
 
@@ -376,13 +379,15 @@ function roundResult() {
 
                 else { decimal = decimal.substring(0, availableLength); }
 
-                roundedResult = `${trunc}.${decimal}${eString}`;
+                if (sign < 0) {roundedResult = '-';}
+                roundedResult = `${roundedResult}${trunc}.${decimal}${eString}`;
                 return;
             }
             else {
                 // if (parseInt(decimal.at(0)) >= 5) { trunc = (parseInt(trunc) + 1).toString(); }
                 // roundedResult = trunc + eString;
-                roundedResult = `${trunc}.${decimal}${eString}`;
+                if (sign < 0) {roundedResult = '-';}
+                roundedResult = `${roundedResult}${trunc}.${decimal}${eString}`;
                 return;
             }
         }
@@ -392,7 +397,7 @@ function roundResult() {
         //em que o JS começa a colocar a forma exponencial por si só
         if (Math.abs(parseFloat(result)) >= 999999999.5 && Math.abs(parseFloat(result)) < 999999999999999934464) {
 
-            if (parseInt(decimal.at(0)) >= 5) { trunc = (parseInt(trunc) + 1*sign).toString(); }
+            if (parseInt(decimal.at(0)) >= 5) { trunc = (parseInt(trunc) + 1).toString(); }
 
             let e = 10 ** (trunc.length - 1);
             let truncByE = `${(parseInt(trunc) / e)}`;
@@ -419,7 +424,8 @@ function roundResult() {
 
                     if (truncByEDecimal) {
                         truncByEDecimal = truncByEDecimal.slice(0, -1) + (parseInt(truncByEDecimal.at(-1)) + 1);
-                        roundedResult = truncByEInteger + '.' + truncByEDecimal + eString;
+                        if (sign < 0) {roundedResult = '-';}
+                        roundedResult = roundedResult + truncByEInteger + '.' + truncByEDecimal + eString;
                         return;
                     }
 
@@ -427,13 +433,13 @@ function roundResult() {
                         truncByEInteger = (parseInt(truncByEInteger) + 1).toString();
 
                         if (truncByEInteger.length > 1) {
-                            if (truncByEInteger > 0) { truncByEInteger = "1"; }
-                            else { truncByEInteger = "-1"; }
+                            truncByEInteger = '1';
 
                             eString = `e+${(trunc.length - 1) + 1}`;
                         }
 
-                        roundedResult = truncByEInteger + eString;
+                        if (sign < 0) {roundedResult = '-';}
+                        roundedResult = roundedResult + truncByEInteger + eString;
                         return;
                     }
 
@@ -446,11 +452,13 @@ function roundResult() {
 
                 else { truncByEDecimal = truncByEDecimal.substring(0, availableLength); }
 
-                roundedResult = `${truncByEInteger}.${truncByEDecimal}${eString}`;
+                if (sign < 0) {roundedResult = '-';}
+                roundedResult = `${roundedResult}${truncByEInteger}.${truncByEDecimal}${eString}`;
                 return;
             }
             else {
-                roundedResult = truncByE + eString;
+                if (sign < 0) {roundedResult = '-';}
+                roundedResult = roundedResult + truncByE + eString;
                 return;
             }
         }
@@ -474,13 +482,16 @@ function roundResult() {
 
                     if (decimal) {
                         decimal = decimal.slice(0, -1) + (parseInt(decimal.at(-1)) + 1);
-                        roundedResult = trunc + '.' + decimal;
+                        
+                        if (sign < 0) {roundedResult = '-';}
+                        roundedResult = roundedResult + trunc + '.' + decimal;
                         return;
                     }
 
                     else {
                         trunc = (parseInt(trunc) + 1).toString();
-                        roundedResult = trunc;
+                        if (sign < 0) {roundedResult = '-';}
+                        roundedResult = roundedResult + trunc;
                         return;
                     }
 
@@ -493,12 +504,14 @@ function roundResult() {
 
                 else { decimal = decimal.substring(0, availableLength); }
 
-                roundedResult = `${trunc}.${decimal}`;
+                if (sign < 0) {roundedResult = '-';}
+                roundedResult = `${roundedResult}${trunc}.${decimal}`;
                 return;
             }
             else {
                 if (parseInt(decimal.at(0)) >= 5) { trunc = (parseInt(trunc) + 1).toString(); }
-                roundedResult = trunc;
+                if (sign < 0) {roundedResult = '-';}
+                roundedResult = roundedResult + trunc;
                 return;
             }
 
@@ -534,14 +547,14 @@ function roundResult() {
                         trunc = (parseInt(trunc) + 1).toString();
 
                         if (trunc.length > 1) {
-                            if (trunc > 0) { trunc = "1"; }
-                            else { trunc = "-1"; }
+                            trunc = '1';
 
                             eFactor--;
                             eString = `e-${eFactor}`;
                         }
 
-                        roundedResult = trunc + eString;
+                        if (sign < 0) {roundedResult = '-';}
+                        roundedResult = roundedResult + trunc + eString;
                         return;
                     }
 
@@ -554,13 +567,15 @@ function roundResult() {
 
                 else { decimal = decimal.substring(0, availableLength); }
 
-                roundedResult = `${trunc}.${decimal}${eString}`;
+                if (sign < 0) {roundedResult = '-';}
+                roundedResult = `${roundedResult}${trunc}.${decimal}${eString}`;
                 return;
             }
             else {
                 // if (parseInt(decimal.at(0)) >= 5) { trunc = (parseInt(trunc) + 1).toString(); }
                 // roundedResult = trunc + eString;
-                roundedResult = `${trunc}.${decimal}${eString}`;
+                if (sign < 0) {roundedResult = '-';}
+                roundedResult = `${roundedResult}${trunc}.${decimal}${eString}`;
                 return;
             }
 
@@ -575,7 +590,8 @@ function removeDecimalZeros() {
     if (!checkPoint(roundedResult)) { return; }
 
     else {
-        let trunc = Math.trunc(parseInt(roundedResult)).toString();
+        let sign = Math.sign(parseFloat(result));
+        let trunc = Math.abs(Math.trunc(parseInt(roundedResult))).toString();
         let decimal = `${roundedResult.substring(roundedResult.indexOf('.') + 1)}`;
         let eString = '';
         if (decimal.includes('e')) {
@@ -588,12 +604,14 @@ function removeDecimalZeros() {
         }
 
         if (decimal) {
-            roundedResult = trunc + '.' + decimal + eString;
+            if (sign < 0) {roundedResult = '-';}
+            roundedResult = roundedResult + trunc + '.' + decimal + eString;
             return;
         }
 
         else {
-            roundedResult = trunc + eString;
+            if (sign < 0) {roundedResult = '-';}
+            roundedResult = roundedResult + trunc + eString;
             return;
         }
 
