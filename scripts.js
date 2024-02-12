@@ -120,7 +120,15 @@ function buttonClick() {
 
                 case (digitFlag === 'increase num1'):
                     if (this.textContent === "." && checkPoint(num1)) { break; }
-                    num1 += this.textContent;
+                    if (num1 === "0") {
+                        if (this.textContent === "0") { break; }
+                        if (this.textContent === ".") { num1 = `0${this.textContent}`; }
+                        else {
+                            num1 = this.textContent;
+                        }
+                    }
+
+                    else { num1 += this.textContent; }
                     display.textContent = num1;
                     break;
 
@@ -132,7 +140,14 @@ function buttonClick() {
 
                 case (digitFlag === 'increase num2'):
                     if (this.textContent === "." && checkPoint(num2)) { break; }
-                    num2 += this.textContent;
+                    if (num2 === "0") {
+                        if (this.textContent === "0") { break; }
+                        if (this.textContent === ".") { num2 = `0${this.textContent}`; }
+                        else {
+                            num2 = this.textContent;
+                        }
+                    }
+                    else { num2 += this.textContent; }
                     display.textContent = num2;
                     break;
 
@@ -261,7 +276,7 @@ function refreshKeepResult() {
 function setDigitFlag() {
 
     switch (true) {
-        case (freshFlag || num1 === '0' || num1 === ''):
+        case (freshFlag || num1 === ''):
             return ('overwrite num1');
 
         case (!operator):
@@ -273,7 +288,7 @@ function setDigitFlag() {
                 return ('discard1');
             }
 
-        case (num2 === '0' || num2 === ''):
+        case (num2 === ''):
             return ('overwrite num2');
 
         default:
