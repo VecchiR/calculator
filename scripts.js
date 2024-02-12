@@ -312,6 +312,8 @@ function roundResult() {
 
 
     else {
+        let sign = Math.sign(parseFloat(result));
+        let signSlotIfNegative = ((1-(sign))/2); // 0 if positive, 1 if negative 
         let trunc = Math.trunc(parseInt(result)).toString();
         let decimal = '';
         let availableLength = 0;
@@ -330,7 +332,7 @@ function roundResult() {
             let eString = result.substring(result.indexOf('e'));
 
 
-            availableLength = 9 - trunc.length - eString.length;
+            availableLength = 9 - trunc.length - eString.length - signSlotIfNegative; 
 
             if (decimal.length > availableLength && availableLength > 0) {
                 decimal = decimal.substring(0, availableLength + 1);
@@ -390,7 +392,7 @@ function roundResult() {
         //em que o JS começa a colocar a forma exponencial por si só
         if (Math.abs(parseFloat(result)) >= 999999999.5 && Math.abs(parseFloat(result)) < 999999999999999934464) {
 
-            if (parseInt(decimal.at(0)) >= 5) { trunc = (parseInt(trunc) + 1).toString(); }
+            if (parseInt(decimal.at(0)) >= 5) { trunc = (parseInt(trunc) + 1*sign).toString(); }
 
             let e = 10 ** (trunc.length - 1);
             let truncByE = `${(parseInt(trunc) / e)}`;
@@ -402,7 +404,7 @@ function roundResult() {
             }
 
 
-            availableLength = 9 - (eString.length) - (truncByEInteger.length);
+            availableLength = 9 - (eString.length) - (truncByEInteger.length) - signSlotIfNegative;  
 
             if (truncByEDecimal.length > availableLength && availableLength > 0) {
                 truncByEDecimal = truncByEDecimal.substring(0, availableLength + 1);
@@ -456,7 +458,7 @@ function roundResult() {
         //nessa faixa de valores, basta arredondar os decimais (se houver)
         if (Math.abs(parseFloat(result)) < 999999999.5 && Math.abs(parseFloat(result)) > 0.0000001) {
 
-            availableLength = 9 - trunc.length;
+            availableLength = 9 - trunc.length - signSlotIfNegative; 
 
             if (decimal.length > availableLength && availableLength > 0) {
                 decimal = decimal.substring(0, availableLength + 1);
@@ -508,7 +510,7 @@ function roundResult() {
             let eFactor = Math.abs(result.substring(result.indexOf('e') + 1));
             let eString = result.substring(result.indexOf('e'));
 
-            availableLength = 9 - trunc.length - eString.length;
+            availableLength = 9 - trunc.length - eString.length - signSlotIfNegative; 
 
             if (decimal.length > availableLength && availableLength > 0) {
                 decimal = decimal.substring(0, availableLength + 1);
