@@ -603,6 +603,8 @@ function removeDecimalZeros() {
             decimal = decimal.substring(0, decimal.length - 1);
         }
 
+        roundedResult = '';
+
         if (decimal) {
             if (sign < 0) {roundedResult = '-';}
             roundedResult = roundedResult + trunc + '.' + decimal + eString;
