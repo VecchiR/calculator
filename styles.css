@@ -1,9 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
+
+
 button {
-    width: 90px;
-    padding: 6px 10px;
-    border-radius: 6px;
+    width: 86px;
+    padding: 18px 10px;
+    border-radius: 24px;
     flex: 1 0 auto;
-    font-size: 60px;
+    /* font-size: 60px; */
+    background-color: #191919;
+    border: 0;
+    font-size: 38px;
 }
 
 .clear,
@@ -16,24 +22,67 @@ button {
     display: flex;
     width: 450px;
     flex-direction: column;
+    row-gap: 8px;
+    padding: 28px 24px;
+    background-color: rgb(247, 247, 247);
+    border-radius: 24px;
+    /* border: 2px solid white; */
 }
 
 .display {
     display: flex;
-    height: 150px;
-    font-size: 84px;
-    align-items: flex-end;
+    height: 100px;
+    /* font-size: 84px; */
+    align-items: center;
     justify-content: end;
+    /* border: 2px solid #ffffff; */
+    border-radius: 24px;
+    background-color: #191919;
+    padding: 8px;
+    /* box-sizing: border-box; */
 }
 
 .buttons-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
-    gap: 5px 5px;
+    /* justify-content: space-between; */
+    gap: 8px;
 }
 
+body {
+    margin: 100px 50px;
+    display: flex;
+    background-color: #191919;
+    align-items:center;
+    justify-content: center;
+}
 
-/* * {
-    border: 1px solid red;
-} */
+* {
+    /* border: 1px solid red; */
+    color: rgb(247, 247, 247);
+    font-family: "Orbitron";
+    font-size: 52px;
+    font-weight: 700;
+}
+
+.digit {
+    background-color: #191919;
+}
+
+.clear,
+.backspace {
+    background-color: rgb(255, 0, 0);
+}
+
+.equal,
+.operator {
+    background-color: rgb(0, 179, 255);
+}
+
+button:hover {
+    opacity: 0.7;
+}
+
+button:active {
+    opacity: 0.9;
+}
