@@ -165,7 +165,7 @@ function buttonClick() {
 
                 result = operate(num1, operator, num2);
 
-                if (result === Infinity || isNaN(result)) {
+                if (result === Infinity || result === -Infinity || isNaN(result)) {
                     result = "ERROR!";
                     roundedResult = result;
                 }
@@ -196,7 +196,7 @@ function buttonClick() {
 
             result = operate(num1, operator, num2);
 
-            if (result === Infinity || isNaN(result)) {
+            if (result === Infinity || result === -Infinity || isNaN(result)) {
                 result = "ERROR!";
                 roundedResult = result;
             }
