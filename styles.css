@@ -83,3 +83,6 @@ button:active {
 button[selected] {
     background-color: rgb(23, 128, 177);
 }
+:focus-visible {
+    outline: 0px;
+}

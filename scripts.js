@@ -15,6 +15,7 @@ allButtons.forEach(function (button) {
 
 
 window.addEventListener('keydown', (e) => {
+    e.preventDefault();
     switch (e.key) {
         case '0':
         case '1':
