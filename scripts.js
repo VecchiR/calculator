@@ -105,6 +105,7 @@ function operate(n1, operator, n2) {
 
 
 function buttonClick() {
+    document.querySelectorAll('.operator').forEach(op=>op.removeAttribute('selected'));
 
     switch (this.className) {
 
@@ -182,6 +183,7 @@ function buttonClick() {
                 refreshKeepResult();
             }
             operator = this.textContent;
+            this.setAttribute("selected", "");
             break;
 
         case "equal":
