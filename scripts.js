@@ -386,8 +386,6 @@ function roundResult() {
                 return;
             }
             else {
-                // if (parseInt(decimal.at(0)) >= 5) { trunc = (parseInt(trunc) + 1).toString(); }
-                // roundedResult = trunc + eString;
                 if (sign < 0) {roundedResult = '-';}
                 roundedResult = `${roundedResult}${trunc}.${decimal}${eString}`;
                 return;
@@ -574,8 +572,6 @@ function roundResult() {
                 return;
             }
             else {
-                // if (parseInt(decimal.at(0)) >= 5) { trunc = (parseInt(trunc) + 1).toString(); }
-                // roundedResult = trunc + eString;
                 if (sign < 0) {roundedResult = '-';}
                 roundedResult = `${roundedResult}${trunc}.${decimal}${eString}`;
                 return;
